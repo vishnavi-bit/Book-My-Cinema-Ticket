@@ -1,0 +1,155 @@
+let selectedSeats = [];
+const moviePrices = {
+'Pushpa': 1000,
+'RRR': 400,
+'Vikram': 180,
+'KGF 2': 220,
+'Avatar 2': 250,
+'Mission Impossible': 300,
+'Doctor Strange': 500,
+'Spider-Man: No Way Home': 410
+};
+function goToNextPage() {
+window.location.href = "secondPage.html"; // Ensure the path is correct
+}
+function goToSeatSelectionPage() {
+const selectedCity = document.getElementById('city-selection').value;
+const selectedMovie = document.getElementById('movie-selection').value;
+const selectedHall = document.getElementById('hall-selection').value;
+const selectedTiming = document.getElementById('timing-selection').value;
+localStorage.setItem('selectedCity', selectedCity);
+localStorage.setItem('selectedMovie', selectedMovie);
+localStorage.setItem('selectedHall', selectedHall);
+localStorage.setItem('selectedTiming', selectedTiming);
+window.location.href = "thirdPage.html";
+}
+window.onload = function () {
+if (window.location.href.indexOf("thirdPage.html") > -1) {
+const movieDetails = ` <p>City: ${localStorage.getItem('selectedCity')}</p>
+<p>Movie: ${localStorage.getItem('selectedMovie')}</p>
+<p>Hall: ${localStorage.getItem('selectedHall')}</p>
+<p>Show Timing: ${localStorage.getItem('selectedTiming')}</p>
+`;
+document.getElementById('movie-details').innerHTML = movieDetails;
+generateSeats(); // Generate seat grid
+}
+if (window.location.href.indexOf("receiptPage.html") > -1) {
+const selectedSeatsText = localStorage.getItem('selectedSeats').split(', ').join('<br>');
+const totalPrice = localStorage.getItem('totalPrice');
+const bookingSummary = ` <p>Movie: ${localStorage.getItem('selectedMovie')}</p>
+<p>Hall: ${localStorage.getItem('selectedHall')}</p>
+<p>Seats: ${selectedSeatsText}</p>
+<p>Total Price: ₹${totalPrice}</p>
+`;
+document.getElementById('booking-summary').innerHTML = bookingSummary;
+}
+};
+function generateSeats() {
+const seatMap = document.getElementById('seat-map');
+const selectedMovie = localStorage.getItem('selectedMovie');
+const selectedHall = localStorage.getItem('selectedHall');
+ConstbookedSeats =JSON.parse(localStorage.getItem(`${selectedMovie}_${selectedHall}_bookedSeats`)) || [];
+seatMap.innerHTML = ''; // Clear previous seats
+for (let i = 0; i < 10; i++) {
+for (let j = 0; j < 10; j++) {
+const seat = document.createElement('div');
+seat.classList.add('seat');
+seat.dataset.row = i + 1;
+seat.dataset.col = j + 1;
+const isBooked = bookedSeats.some(s => s.row === i + 1 && s.col === j + 1);
+if (isBooked) {
+seat.classList.add('booked'); // Mark it as booked
+} else {
+seat.onclick = () => toggleSeatSelection(i + 1, j + 1); // Allow selection if not booked}
+seatMap.appendChild(seat);
+}
+}
+}
+function toggleSeatSelection(row, col) {
+const seat = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+if (seat.classList.contains('booked')) return; // Prevent selecting booked seats
+if (seat.classList.contains('selected')) {
+seat.classList.remove('selected');
+selectedSeats = selectedSeats.filter(s => !(s.row === row && s.col === col));
+} else {
+seat.classList.add('selected');
+selectedSeats.push({ row, col });
+}
+}
+function bookSeats() {
+selectedSeats.forEach(seat => {
+constseatElement=document.querySelector(`[data-row="${seat.row}"][data- col="${seat.col}"]`);
+seatElement.classList.add('booked');
+seatElement.classList.remove('selected');
+});
+const selectedMovie = localStorage.getItem('selectedMovie');
+const selectedHall = localStorage.getItem('selectedHall');
+LetbookedSeats =JSON.parse(localStorage.getItem(`${selectedMovie}_${selectedHall}_bookedSeats`)) || [];
+selectedSeats.forEach(seat => {
+bookedSeats.push({ row: seat.row, col: seat.col });
+});
+localStorage.setItem(`${selectedMovie}_${selectedHall}_bookedSeats`, JSON.stringify(bookedSeats));
+const moviePrice = moviePrices[selectedMovie];
+localStorage.setItem('selectedSeats',selectedSeats.map(seat => `${seat.row}-${seat.col}`).join(','));
+localStorage.setItem('totalPrice', selectedSeats.length * moviePrice); // Calculate total pricewindow.location.href = "receiptPage.html";
+}
+function confirmBooking() {
+alert('Your booking is confirmed! Thank you for booking with us.');
+window.location.href = "index.html"; // Make sure index.html is your main bookingpage}
+function togglePassword() {
+const passwordField = document.querySelectorAll('#password, #confirm-password')[0];
+const eyeIcon = document.querySelector('.eye-icon');
+if (passwordField.type === "password") {
+passwordField.type = "text";
+eyeIcon.innerHTML = " "; // Hide icon
+} else {
+passwordField.type = "password";
+eyeIcon.innerHTML = " "; // Show icon
+}
+}
+function registerUser(event) {
+event.preventDefault();
+const username = document.getElementById('username').value;
+const email = document.getElementById('email').value;
+const password = document.getElementById('password').value;
+const confirmPassword = document.getElementById('confirm-password').value;
+if (password !== confirmPassword) {
+alert('Passwords do not match');
+return;
+}
+const users = JSON.parse(localStorage.getItem('users')) || [];
+const userExists = users.some(user => user.username === username || user.email ===email);
+if (userExists) {
+alert('Username or email already exists');
+return;
+}
+29
+users.push({ username, email, password });
+localStorage.setItem('users', JSON.stringify(users))
+alert('Registration successful! You can now log in.');
+window.location.href = 'login.html'; // Redirect to login page
+}
+function loginUser(event) {
+event.preventDefault();
+const username = document.getElementById('username').value;
+const password = document.getElementById('password').value;
+const users = JSON.parse(localStorage.getItem('users')) || [];
+const user = users.find(user => user.username === username && user.password ===password);if (user) {
+localStorage.setItem('isLoggedIn', true);
+window.location.href = 'mainPage.html'; // Redirect to the main page
+} else {
+alert('Invalid username or password');
+}
+}
+function loginUser(event) {
+event.preventDefault();
+const username = document.getElementById('username').value;
+const password = document.getElementById('password').value;
+window.location.href = "index.html"; // Redirect to index.html page
+}
+function togglePassword() {
+const passwordField = document.getElementById('password');
+const eyeIcon = document.querySelector('.eye-icon');
+if (passwordField.type === 'password') {
+passwordField.type = 'text';
+eyeIcon.textContent = ' '; } else { passwordField.type = 'password';eyeIcon.textContent=' '; }}
