@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register - Movie Ticket Booking</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+<h1>Create Your Account</h1>
+<p>Join us and book your favorite movie tickets easily!</p>
+<form id="register-form" onsubmit="return registerUser(event)">
+<label for="username">Username</label>
+<input type="text" id="username" name="username" required placeholder="Enter yourusername">
+<label for="email">Email</label>
+<input type="email" id="email" name="email" required placeholder="Enter your email"><label for="password">Password</label>
+<div class="password-container">
+<input type="password" id="password" name="password" required placeholder="Enteryour password">
+<span class="eye-icon" onclick="togglePassword()"> </span>
+</div>
+<label for="confirm-password">Confirm Password</label>
+<input type="password" id="confirm-password" name="confirm-password" requiredplaceholder="Confirm your password">
+<button type="submit">Register</button>
+</form>
+<p>Already have an account? <a href="login.html">Login here</a></p>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
